@@ -34,6 +34,10 @@
     async function handleEmailConfirmation(accessToken) {
       document.getElementById('title').innerText = "Email Confirmed";
       document.getElementById('email-confirmation').style.display = "block";
+
+      setTimeout(() => {
+        window.location.href = "https://www.mantum.tech//emailcomf";  // Change to your confirmation page URL
+      }, 3000);
     }
 
     async function handlePasswordReset(accessToken) {
@@ -51,7 +55,10 @@
         if (error) {
           document.getElementById('status').innerText = "Error: " + error.message;
         } else {
-          document.getElementById('status').innerText = "Password updated! You can now return to the game.";
+          document.getElementById('status').innerText = "Password updated! Redirecting...";
+          setTimeout(() => {
+            window.location.href = "/login";  // Change to your login or next page URL
+          }, 3000);
         }
       };
     }
