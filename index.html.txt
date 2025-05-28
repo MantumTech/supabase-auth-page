@@ -36,7 +36,7 @@
       document.getElementById('email-confirmation').style.display = "block";
 
       setTimeout(() => {
-        window.location.href = "https://www.mantum.tech//emailcomf";  // Change to your confirmation page URL
+        window.location.href = "https://www.mantum.tech/emailcomf";  // Your Squarespace email confirmation page
       }, 3000);
     }
 
@@ -57,7 +57,7 @@
         } else {
           document.getElementById('status').innerText = "Password updated! Redirecting...";
           setTimeout(() => {
-            window.location.href = "/login";  // Change to your login or next page URL
+            window.location.href = "https://www.mantum.tech/resetpassword";  // Your Squarespace password reset page
           }, 3000);
         }
       };
