@@ -1,86 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Auth Handler</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<style>
-  body { font-family: Arial, sans-serif; text-align: center; margin-top: 40px; }
-  input { padding: 10px; width: 200px; }
-  button { padding: 10px 20px; margin-top: 10px; }
-  #status { margin-top: 20px; color: red; }
-</style>
-</head>
+<html>
+<head><title>Authenticating...</title></head>
 <body>
-  <h2 id="title"></h2>
-
-  <div id="email-confirmation" style="display:none;">
-    <p>Your email has been confirmed! You can now log in.</p>
-  </div>
-
-  <div id="password-reset" style="display:none;">
-    <input type="password" id="new-password" placeholder="New Password" />
-    <br />
-    <button id="reset-btn">Set Password</button>
-    <p id="status"></p>
-  </div>
+  <p>Redirecting, please wait...</p>
 
   <script>
-    const supabaseUrl = "https://sbdagijwiamcuefrovri.supabase.co";
-    const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZGFnaWp3aWFtY3VlZnJvdnJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYwNzkxNjIsImV4cCI6MjA2MTY1NTE2Mn0.dNm3mcwbHbDXqotTHnDSZQRu1LTKfZD1LEvxtm4qwps";
-    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const type = hashParams.get('type');
+    const access_token = hashParams.get('access_token');
+    const error = hashParams.get('error_description');
 
-    async function handleEmailConfirmation(accessToken) {
-      document.getElementById('title').innerText = "Email Confirmed";
-      document.getElementById('email-confirmation').style.display = "block";
-
-      setTimeout(() => {
-        window.location.href = "https://www.mantum.tech/emailcomf";  // Your Squarespace email confirmation page
-      }, 3000);
+    if (error) {
+      window.location.href = "https://mantum.tech/error";
+    } else if (type === 'signup') {
+      window.location.href = "https://mantum.tech/emailcomf";
+    } else if (type === 'recovery') {
+      // You can optionally store token in sessionStorage
+      sessionStorage.setItem("access_token", access_token);
+      window.location.href = "https://mantum.tech/resetpassword";
+    } else {
+      window.location.href = "https://mantum.tech/error";
     }
-
-    async function handlePasswordReset(accessToken) {
-      document.getElementById('title').innerText = "Reset Your Password";
-      document.getElementById('password-reset').style.display = "block";
-
-      document.getElementById('reset-btn').onclick = async () => {
-        const newPassword = document.getElementById('new-password').value;
-        if (!newPassword) {
-          document.getElementById('status').innerText = "Please enter a new password.";
-          return;
-        }
-        await supabase.auth.setSession({ access_token: accessToken, refresh_token: accessToken });
-        const { error } = await supabase.auth.updateUser({ password: newPassword });
-        if (error) {
-          document.getElementById('status').innerText = "Error: " + error.message;
-        } else {
-          document.getElementById('status').innerText = "Password updated! Redirecting...";
-          setTimeout(() => {
-            window.location.href = "https://www.mantum.tech/resetpassword";  // Your Squarespace password reset page
-          }, 3000);
-        }
-      };
-    }
-
-    (function() {
-      const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      const type = hashParams.get("type");
-      const accessToken = hashParams.get("access_token");
-
-      if (!accessToken) {
-        document.getElementById('title').innerText = "Invalid or missing access token.";
-        return;
-      }
-
-      if (type === "signup") {
-        handleEmailConfirmation(accessToken);
-      } else if (type === "recovery") {
-        handlePasswordReset(accessToken);
-      } else {
-        document.getElementById('title').innerText = "Unknown link type.";
-      }
-    })();
   </script>
 </body>
 </html>
