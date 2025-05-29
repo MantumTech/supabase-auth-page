@@ -15,9 +15,8 @@
     } else if (type === 'signup') {
       window.location.href = "https://mantum.tech/emailcomf";
     } else if (type === 'recovery') {
-      // You can optionally store token in sessionStorage
-      sessionStorage.setItem("access_token", access_token);
-      window.location.href = "https://mantumtech.github.io/reset-password/";
+      // Forward the hash so reset-password page gets the token
+      window.location.href = "https://mantumtech.github.io/reset-password/#" + window.location.hash.substring(1);
     } else {
       window.location.href = "https://mantum.tech/error";
     }
